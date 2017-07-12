@@ -25,7 +25,7 @@ buffer_size = 1024
 
 def file_handler(file_name):
 	data = ''
-	if(get_file_type(file_name).split('/')[0] == 'video'):
+	if(get_file_type(file_name).split('/')[0] == 'video'): #### more types
 		file_name = 'site/assets/film/' + file_name
 	elif(get_file_type(file_name).split('/')[0] == 'image'):
 		file_name = 'site/assets/img/' + file_name
@@ -74,7 +74,7 @@ def send_msg(c_s, types, data, remain): # try using sendall when sending a large
 			try:
 				send = c_s.send(data)
 				data = data[send:]
-				print " --- Sent: ", send, "bytes data, remain: ", len(data), "bytes data"
+				print " --- Sent: ", send, "bytes data, remain: ", len(data), "bytes data"  #### this should be improved if the old socket fails, a new sockets requires new data
 				print " -- Pending ...", t, " sec"
 				time.sleep(t)
 			except socket.error, e:
@@ -101,7 +101,7 @@ def header_generator(code, file, cont_len):
 	if(code == 200): # determine response title
 		txt = 'HTTP/1.1 200 OK\r\n'
 	elif(code == 400):
-		txt = 'HTTP/1.1 400 Bad Request\r\n'
+		txt = 'HTTP/1.1 400 Bad Request\r\n'   #### more error types
 	elif(code == 404):
 		txt = 'HTTP/1.1 404 Not Found\r\n'
 	elif(code == 505):
@@ -111,7 +111,7 @@ def header_generator(code, file, cont_len):
 	txt += 'Accept-Ranges: bytes\r\n'
 	txt += 'Content-Type: ' + file_type + '\r\n'
 	txt += 'Content-Language: en\r\n'
-	txt += 'Content-Length: ' + str(cont_len) + '\r\n'
+	txt += 'Content-Length: ' + str(cont_len) + '\r\n'    #### more contents and decide when to use which of these
 	txt += 'Connection: close\r\n'
 	txt += '\r\n'
 	return txt
@@ -211,7 +211,7 @@ def main(): # main program
 					resp_header = header_generator(400, request_file, len(resp_cont))
 					resp_data = resp_header.encode()
 					resp_data += resp_cont
-					send_msg(c_socket,  get_file_type(request_file), resp_data, len(resp_data))
+					send_msg(c_socket,  get_file_type(request_file), resp_data, len(resp_data))   ### need to implement "HEAD", "POST", etc
 					shutdown_socket(c_socket)
 					print " -- Close connection with client: ", c_address
 
