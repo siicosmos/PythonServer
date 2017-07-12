@@ -20,15 +20,18 @@ import mimetypes # for MIME type checking
 s_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # create an INET, STREAMing (TCP, use SOCK_DGRAM for UDP) server socket (s_socket)
 server_name = 'Macintosh HTTP Server'
 hostaddress = socket.gethostbyname(socket.gethostname()) # get the IP address of this machine, if locally testing: using '' or '127.0.0.1' instead
-hostport = 8088 # unsigned port, use 0 for system assigning
+hostport = 0 # unsigned port, use 0 for system assigning
 buffer_size = 1024
 
 def file_handler(file_name):
 	data = ''
 	if(get_file_type(file_name).split('/')[0] == 'video'):
-		file_name = 'site/assets/film' + file_name
+		file_name = 'site/assets/film/' + file_name
 	elif(get_file_type(file_name).split('/')[0] == 'image'):
-		file_name = 'site/assets/img' + file_name
+		file_name = 'site/assets/img/' + file_name
+	elif((get_file_type(file_name).split('/')[0] == 'text')):
+		file_name = 'site/' + file_name
+	print file_name
 	try:
 		file = open(file_name, 'rb') # open target file
 		data = file.read() # read into data
