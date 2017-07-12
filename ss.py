@@ -27,8 +27,8 @@ def file_handler(file_name):
 	data = ''
 	if(get_file_type(file_name).split('/')[0] == 'video'):
 		file_name = 'site/assets/film' + file_name
-	elif:
-		
+	elif(get_file_type(file_name).split('/')[0] == 'image'):
+		file_name = 'site/assets/img' + file_name
 	try:
 		file = open(file_name, 'rb') # open target file
 		data = file.read() # read into data
