@@ -16,10 +16,12 @@ import sys # for exiting the program
 import time # for request time
 import errno # error number handling
 import mimetypes # for MIME type checking
+import urllib, re # for getting public ip
 
+data = re.search('"([0-9.]*)"', urllib.urlopen("http://ip.jsontest.com/").read()).group(1)
 s_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # create an INET, STREAMing (TCP, use SOCK_DGRAM for UDP) server socket (s_socket)
 server_name = 'Macintosh HTTP Server'
-hostaddress = socket.gethostbyname(socket.gethostname()) # get the IP address of this machine, if locally testing: using '' or '127.0.0.1' instead
+hostaddress = socket.gethostbyname(socket.gethostname()) # get the local IP address of this machine, if locally testing: using '' or '127.0.0.1' instead
 hostport = 0 # unsigned port, use 0 for system assigning
 buffer_size = 1024
 
