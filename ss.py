@@ -18,7 +18,7 @@ import errno # error number handling
 import mimetypes # for MIME type checking
 import urllib, re # for getting public ip
 
-data = re.search('"([0-9.]*)"', urllib.urlopen("http://ip.jsontest.com/").read()).group(1)
+data = re.search('"([0-9.]*)"', urllib.urlopen("http://ip.jsontest.com/").read()).group(1) # public ip ? route forwarding to local ip ?
 s_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # create an INET, STREAMing (TCP, use SOCK_DGRAM for UDP) server socket (s_socket)
 server_name = 'Macintosh HTTP Server'
 hostaddress = socket.gethostbyname(socket.gethostname()) # get the local IP address of this machine, if locally testing: using '' or '127.0.0.1' instead
@@ -172,7 +172,7 @@ def main(): # main program
 				print " -- Close connection with client: ", c_address
 
 			elif(HTTP_version == 'HTTP/1.1'): # if the client requests HTTP 1.1 version
-				if(request_msg == 'GET'): # GET request from client
+				if(request_msg == 'GET' or 'HEAD'): # GET request from client
 					resp_cont = ''
 					if(request_file == '/'): # empty request file name
 						request_file = 'index.html' # the default web page to display
@@ -205,6 +205,9 @@ def main(): # main program
 					send_msg(c_socket, get_file_type(request_file), resp_data, len(resp_data))
 					shutdown_socket(c_socket) # close connection to client
 					print " -- Close connection with client: ", c_address
+
+				elif(request_msg == 'POST'): # HEAD request from client
+					resp_cont = ''
 
 				else:
 					print "Unsupported HTTP request: ", request_msg # other request like 'HEAD', 'POST', etc are currently not programmed
