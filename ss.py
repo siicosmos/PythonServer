@@ -18,11 +18,13 @@ import errno # error number handling
 import mimetypes # for MIME type checking
 import urllib, re # for getting public ip
 
-data = re.search('"([0-9.]*)"', urllib.urlopen("http://ip.jsontest.com/").read()).group(1) # public ip ? route forwarding to local ip ?
+mimetypes.init() # initialize the internal data structures for mimetypes
+#ipdata = re.search('"([0-9.]*)"', urllib.urlopen("http://ip.jsontest.com/").read()).group(1) # public ip ? route forwarding to local ip ?
+#print ipdata
 s_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # create an INET, STREAMing (TCP, use SOCK_DGRAM for UDP) server socket (s_socket)
 server_name = 'Macintosh HTTP Server'
-hostaddress = socket.gethostbyname(socket.gethostname()) # get the local IP address of this machine, if locally testing: using '' or '127.0.0.1' instead
-hostport = 0 # unsigned port, use 0 for system assigning
+hostaddress = socket.gethostbyname(socket.gethostname()) # get the local IP address of this machine, if locally testing: using '' or '127.0.0.0' instead
+hostport = 4300 # unsigned port, use 0 for system assigning
 buffer_size = 1024
 
 def file_handler(file_name):
@@ -31,8 +33,13 @@ def file_handler(file_name):
 		file_name = 'site/assets/film/' + file_name
 	elif(get_file_type(file_name).split('/')[0] == 'image'):
 		file_name = 'site/assets/img/' + file_name
+	elif((get_file_type(file_name).split('/')[1] == 'css')):
+		file_name = 'site/css/' + file_name
 	elif((get_file_type(file_name).split('/')[0] == 'text')):
 		file_name = 'site/' + file_name
+	elif((get_file_type(file_name) == 'application/x-font-otf')):
+		file_name = 'site/assets/fonts/' + file_name.split('.')[0] + '/' + file_name
+
 	print file_name
 	try:
 		file = open(file_name, 'rb') # open target file
@@ -71,7 +78,7 @@ def send_msg(c_s, types, data, remain): # try using sendall when sending a large
 		except socket.error, e:
 			print "Error sendall(data): %s" %e, ", try using send(data)"
 	elif(len(data) >= 102400):
-		t = 0.1
+		t = 0.0
 		while(data): # try the old way
 			try:
 				send = c_s.send(data)
